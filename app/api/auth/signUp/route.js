@@ -17,15 +17,23 @@ export const POST = async (req) => {
       );
     }
 
-    const hashPassword = await hash(password, 12);
+    const existedUser = await User.findOne({ userName: userName });
 
+    if (existedUser) {
+      console.log("Username taken");
+      return NextResponse.json(
+        { message: "Username is already taken." },
+        { status: 409 }
+      );
+    }
+
+    const hashPassword = await hash(password, 12);
     const newUser = await User.create({
       userName,
       Email,
       FullName,
       password: hashPassword,
     });
-
     if (newUser) {
       return NextResponse.json({ newUser }, { status: 201 });
     }

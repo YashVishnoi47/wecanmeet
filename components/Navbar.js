@@ -6,8 +6,10 @@ import { useSession } from "next-auth/react";
 import { Button } from "./ui/button";
 import { signOut } from "next-auth/react";
 import { LogOut } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const Navbar = () => {
+  const router = useRouter();
   const { data: session } = useSession();
   return (
     <div className="w-full h-20 flex justify-center items-center">
@@ -20,7 +22,10 @@ const Navbar = () => {
         {/* Left */}
         <div className="h-full w-1/2 flex items-center gap-10 px-4">
           {/* Logo or Brand Name */}
-          <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 cursor-default select-none">
+          <h1
+            onClick={() => router.push("/")}
+            className="text-3xl font-extrabold tracking-tight text-gray-900 cursor-pointer select-none"
+          >
             Organised
           </h1>
 

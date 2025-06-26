@@ -10,20 +10,18 @@ export const authOptions = {
       id: "credentials",
       name: "credentials",
       credentials: {
-        username: { label: "Username", type: "text" },
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
         await connectDB();
         try {
           const user = await User.findOne({
-            userName: credentials?.username,
+            Email: credentials?.email,
           });
 
           if (!user) {
-            return NextResponse.json(
-              { error: "User not found" },
-              { status: 404 }
-            );
+            throw new Error("User not found");
           }
 
           const isPasswordCorrect = await bcrypt.compare(
@@ -32,22 +30,12 @@ export const authOptions = {
           );
 
           if (isPasswordCorrect) {
-            console.log(user);
             return user;
           } else {
-            return NextResponse(
-              { message: "Password Incorrect" },
-              { status: 401 }
-            );
+            throw new Error("Password Incorrect");
           }
         } catch (error) {
-          console.log(error);
-          throw new Error("Error for cheking", error);
-
-          //   return NextResponse.json(
-          //     { error: "Internal Server Error" },
-          //     { status: 500 }
-          //   );
+          throw new Error("Internal server error");
         }
       },
     }),

@@ -12,6 +12,9 @@ const useUserStore = create((set) => ({
 
   loading: false,
   setLoading: (loading) => set({ loading }),
+
+  errormsg: "",
+  setErrormsg: (errormsg) => set({ errormsg }),
 }));
 
 export default useUserStore;

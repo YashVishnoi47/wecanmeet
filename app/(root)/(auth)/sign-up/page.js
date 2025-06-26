@@ -21,7 +21,7 @@ import useUserStores from "@/store/userStore";
 import LoginLoader from "@/components/loaders/loginLoaders";
 
 const signUp = () => {
-  const { loading, setLoading } = useUserStores();
+  const { loading, setLoading, errormsg, setErrormsg } = useUserStores();
   console.log(loading);
   const router = useRouter();
   const form = useForm({
@@ -40,7 +40,6 @@ const signUp = () => {
       password,
       redirect: false,
     });
-    console.log(res);
 
     if (res.ok) {
       router.push("/");
@@ -69,12 +68,9 @@ const signUp = () => {
       if (res.ok) {
         handleSignIn({ email: data.Email, password: data.password });
         setLoading(false);
-        console.log(loading);
-        // console.log("User Created");
       } else {
         setLoading(false);
-        console.log(data.error);
-        console.log("User Creation error");
+        setErrormsg(data.message);
       }
     } catch (error) {
       setLoading(false);
@@ -91,6 +87,7 @@ const signUp = () => {
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-6 bg-white p-6 rounded-xl shadow-md w-full flex flex-col justify-center mt-10 max-w-md mx-auto"
         >
+          {errormsg && <p className="text-xl text-red-500">{errormsg}</p>}
           <FormField
             control={form.control}
             name="userName"
