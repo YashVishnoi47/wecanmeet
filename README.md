@@ -1,4 +1,4 @@
-# Organised (In progess)
+# Organised (In progress)
 
 > A minimalist web-app for organising your meetings.
 
