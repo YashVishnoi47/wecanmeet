@@ -3,8 +3,7 @@ import Navbar from "@/components/Navbar";
 import React from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import useUserStore from "@/store/userStore";
-
+import UseUserStore from "@/store/userStore";
 const SignIn = () => {
   const router = useRouter();
   const {
@@ -16,7 +15,7 @@ const SignIn = () => {
     setLoading,
     errormsg,
     setErrormsg,
-  } = useUserStore();
+  } = UseUserStore();
 
   const handleSignIn = async (e) => {
     e.preventDefault();

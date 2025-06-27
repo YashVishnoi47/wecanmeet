@@ -17,11 +17,11 @@ import {
 } from "@/components/ui/form";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
-import useUserStores from "@/store/userStore";
 import LoginLoader from "@/components/loaders/loginLoaders";
+import UseUserStore from "@/store/userStore";
 
 const SignUp = () => {
-  const { loading, setLoading, errormsg, setErrormsg } = useUserStores();
+  const { loading, setLoading, errormsg, setErrormsg } = UseUserStore();
   console.log(loading);
   const router = useRouter();
   const form = useForm({

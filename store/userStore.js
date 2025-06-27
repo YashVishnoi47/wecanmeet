@@ -17,4 +17,4 @@ const UseUserStore = create((set) => ({
   setErrormsg: (errormsg) => set({ errormsg }),
 }));
 
-export default useUserStore;
+export default UseUserStore;
