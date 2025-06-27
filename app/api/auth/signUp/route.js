@@ -20,7 +20,6 @@ export const POST = async (req) => {
     const existedUser = await User.findOne({ userName: userName });
 
     if (existedUser) {
-      console.log("Username taken");
       return NextResponse.json(
         { message: "Username is already taken." },
         { status: 409 }
@@ -35,7 +34,7 @@ export const POST = async (req) => {
       password: hashPassword,
     });
     if (newUser) {
-      return NextResponse.json({ newUser }, { status: 201 });
+      return NextResponse.json({ message:"User Created Succesfully" }, { status: 201 });
     }
   } catch (err) {
     console.log(err);

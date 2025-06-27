@@ -2,7 +2,6 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { connectDB } from "@/lib/db/database";
 import User from "@/lib/db/models/userModel";
-import { NextResponse } from "next/server";
 
 export const authOptions = {
   providers: [

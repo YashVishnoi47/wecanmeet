@@ -26,11 +26,10 @@ const SignIn = () => {
       password,
       redirect: false,
     });
-    console.log(res);
 
     if (!res.ok) {
-      console.log("Login failed:", res.error); 
-      setErrormsg(res.error); // 
+      console.log("Login failed:", res.error);
+      setErrormsg(res.error); //
     }
     if (res.ok) {
       router.push("/");

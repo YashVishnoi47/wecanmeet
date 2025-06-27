@@ -16,13 +16,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
-import LoginLoader from "@/components/loaders/loginLoaders";
 import UseUserStore from "@/store/userStore";
+import { signIn } from "next-auth/react";
+import { Overpass } from "next/font/google";
 
 const SignUp = () => {
   const { loading, setLoading, errormsg, setErrormsg } = UseUserStore();
-  console.log(loading);
   const router = useRouter();
   const form = useForm({
     resolver: zodResolver(signUpFormSchema),
@@ -41,10 +40,13 @@ const SignUp = () => {
       redirect: false,
     });
 
+    if (!res.ok) {
+      console.log("Login failed:", res.error);
+    }
     if (res.ok) {
       router.push("/");
     } else {
-      router.push("/");
+      console.log("Error");
     }
   };
 
@@ -66,8 +68,9 @@ const SignUp = () => {
 
       const data = await res.json();
       if (res.ok) {
-        handleSignIn({ email: data.Email, password: data.password });
         setLoading(false);
+        handleSignIn({ email: values.Email, password: values.password });
+        router.push("/");
       } else {
         setLoading(false);
         setErrormsg(data.message);
