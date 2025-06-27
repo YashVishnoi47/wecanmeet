@@ -13,7 +13,7 @@ const dashboard = () => {
   //  Creating Meeting Card
   const CreateMeetingCard = async () => {
     try {
-      const res = await fetch(`/api/meeting/`, {
+      const res = await fetch(`/api/meeting/createCard`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
