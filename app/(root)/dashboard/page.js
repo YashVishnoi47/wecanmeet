@@ -4,9 +4,8 @@ import { useSession } from "next-auth/react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import CommonButton from "@/components/CommonButton";
 
-const dashboard = () => {
+const Dashboard = () => {
   const router = useRouter();
   const { data: session } = useSession();
 
@@ -26,7 +25,7 @@ const dashboard = () => {
       if (!res.ok) {
         console.log(data.error);
       } else {
-        console.log("Card Created");
+        alert(data.error);
       }
     } catch (error) {
       console.log(error);
@@ -87,4 +86,4 @@ const dashboard = () => {
   );
 };
 
-export default dashboard;
+export default Dashboard;
