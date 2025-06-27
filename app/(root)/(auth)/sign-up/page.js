@@ -20,7 +20,7 @@ import { signIn } from "next-auth/react";
 import useUserStores from "@/store/userStore";
 import LoginLoader from "@/components/loaders/loginLoaders";
 
-const signUp = () => {
+const SignUp = () => {
   const { loading, setLoading, errormsg, setErrormsg } = useUserStores();
   console.log(loading);
   const router = useRouter();
@@ -185,4 +185,4 @@ const signUp = () => {
   );
 };
 
-export default signUp;
+export default SignUp;

@@ -1,9 +1,9 @@
 "use client";
 import Navbar from "@/components/Navbar";
 import React from "react";
-import useUserStore from "@/store/userStore";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import useUserStore from "@/store/userStore";
 
 const SignIn = () => {
   const router = useRouter();
