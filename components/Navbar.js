@@ -54,7 +54,7 @@ const Navbar = () => {
             </div>
           ) : (
             <div className="flex gap-4 justify-center items-center">
-              <CommonButton link={"/"} text={"Go to app"} />
+              <CommonButton link={"/dashboard"} text={"Go to app"} />
               <Button
                 onClick={() => signOut()}
                 className="bg-white text-black border cursor-pointer border-black hover:bg-black hover:text-white transition-colors duration-200 flex items-center gap-2 px-5 py-2 rounded-lg"

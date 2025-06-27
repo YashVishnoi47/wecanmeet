@@ -18,7 +18,6 @@ import {
 import { useRouter } from "next/navigation";
 import UseUserStore from "@/store/userStore";
 import { signIn } from "next-auth/react";
-import { Overpass } from "next/font/google";
 
 const SignUp = () => {
   const { loading, setLoading, errormsg, setErrormsg } = UseUserStore();

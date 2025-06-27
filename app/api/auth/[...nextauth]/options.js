@@ -12,7 +12,7 @@ export const authOptions = {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         await connectDB();
         try {
           const user = await User.findOne({
@@ -43,9 +43,9 @@ export const authOptions = {
     async session({ session, token }) {
       if (token) {
         session.user._id = token._id;
-        session.user.email = token.email;
+        session.user.Email = token.Email;
         session.user.userName = token.userName;
-        token.FirstName = token.fullName;
+        session.user.FullName = token.FullName;
       }
       return session;
     },
@@ -53,14 +53,16 @@ export const authOptions = {
       if (user) {
         token._id = user._id?.toString();
         token.userName = user.userName;
-        token.email = user.email;
-        token.FirstName = user.fullName;
+        token.Email = user.Email;
+        token.FullName = user.FullName;
       }
+      return token;
     },
   },
   pages: {
-    signIn: "sign-in",
+    signIn: "/sign-in",
   },
+
   session: {
     strategy: "jwt",
   },
