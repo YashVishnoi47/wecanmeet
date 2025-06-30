@@ -46,6 +46,8 @@ export const authOptions = {
         session.user.Email = token.Email;
         session.user.userName = token.userName;
         session.user.FullName = token.FullName;
+        session.user.MeetingCardID = token.MeetingCardID;
+        session.user.Meetings = token.Meetings;
       }
       return session;
     },
@@ -55,6 +57,8 @@ export const authOptions = {
         token.userName = user.userName;
         token.Email = user.Email;
         token.FullName = user.FullName;
+        token.MeetingCardID = user.MeetingCardID;
+        token.Meetings = user.Meetings;
       }
       return token;
     },

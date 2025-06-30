@@ -1,13 +1,20 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import MeetingCardComp from "@/components/MeetingCardComp";
+import dynamic from "next/dynamic";
+
+const Availability = dynamic(() => import("@/components/Availability"));
+const Meetings = dynamic(() => import("@/components/Meetings"));
 
 const Dashboard = () => {
   const router = useRouter();
   const { data: session } = useSession();
+  const [card, setcard] = useState([]);
+  const [comp, setComp] = useState("Availability");
 
   //  Creating Meeting Card
   const CreateMeetingCard = async () => {
@@ -31,6 +38,33 @@ const Dashboard = () => {
       console.log(error);
     }
   };
+
+  // Fetching Cards When the session is available
+  useEffect(() => {
+    if (!session?.user?._id) return;
+    const fetcCard = async () => {
+      try {
+        const res = await fetch(
+          `/api/meeting/fetchMeetingCard?ownerID=${session?.user._id}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const data = await res.json();
+
+        if (res.ok) {
+          setcard(data.Cards);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetcCard();
+  }, [session]);
 
   if (!session) {
     return (
@@ -70,18 +104,40 @@ const Dashboard = () => {
     );
   }
   return (
-    <div className="w-full h-screen bg-black flex justify-center items-center">
-      <motion.button
-        onClick={CreateMeetingCard}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0, ease: "easeIn" }}
-        className={
-          "px-5 py-2  rounded-lg border-2 bg-black hover:bg-white hover:border-black active:scale-95 hover:text-black backdrop-blur-lg text-white transition-all duration-200 ease-in-out cursor-pointer"
-        }
+    <div className="w-full h-screen bg-black text-white flex justify-start items-center">
+      {/* side Bar */}
+      <div className="h-full w-[15%] flex flex-col items-center text-white shadow-md border-r border-white/10">
+        {/* Header */}
+        <div className="w-full h-[10%] border-b border-white/10 flex justify-start p-4 items-center text-4xl font-semibold tracking-wide">
+          User
+        </div>
+
+        {/* Navigation */}
+        <div className="w-full flex flex-col items-center mt-4 space-y-2 px-2">
+          {["Meetings", "Availability", "Card Settings"].map((item, idx) => (
+            <button
+              onClick={() => setComp(item)}
+              key={idx}
+              className={`w-full py-2.5 px-3 rounded-lg text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all duration-200 cursor-pointer text-start ${
+                item === comp && "bg-white/10 text-white"
+              }`}
+            >
+              {item}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Main */}
+      <div
+        className="h-full w-[85%] flex justify-center items-center
+       "
       >
-        Create Card
-      </motion.button>
+        {comp === "Availability" && <Availability />}
+        {comp === "Meetings" && <Meetings card={card} />}
+      </div>
+
+      
     </div>
   );
 };
