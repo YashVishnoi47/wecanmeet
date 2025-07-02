@@ -15,6 +15,9 @@ const UseUserStore = create((set) => ({
 
   errormsg: "",
   setErrormsg: (errormsg) => set({ errormsg }),
+
+  userCard: "",
+  setUserCard: (userCard) => set({ userCard }),
 }));
 
 export default UseUserStore;

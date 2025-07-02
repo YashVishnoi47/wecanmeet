@@ -4,40 +4,20 @@ import { useSession } from "next-auth/react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import MeetingCardComp from "@/components/MeetingCardComp";
+import UseUserStore from "@/store/userStore";
+import UseCompStore from "@/store/componentStore";
 import dynamic from "next/dynamic";
 
+// Dynamic Components
 const Availability = dynamic(() => import("@/components/Availability"));
 const Meetings = dynamic(() => import("@/components/Meetings"));
+
 
 const Dashboard = () => {
   const router = useRouter();
   const { data: session } = useSession();
-  const [card, setcard] = useState([]);
-  const [comp, setComp] = useState("Availability");
-
-  //  Creating Meeting Card
-  const CreateMeetingCard = async () => {
-    try {
-      const res = await fetch(`/api/meeting/createCard`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ cardOwnerId: session?.user._id }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        console.log(data.error);
-      } else {
-        alert(data.error);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const { setUserCard } = UseUserStore();
+  const { dashboardComp, setDashboardComp } = UseCompStore();
 
   // Fetching Cards When the session is available
   useEffect(() => {
@@ -56,7 +36,7 @@ const Dashboard = () => {
         const data = await res.json();
 
         if (res.ok) {
-          setcard(data.Cards);
+          setUserCard(data.Cards);
         }
       } catch (error) {
         console.log(error);
@@ -116,10 +96,10 @@ const Dashboard = () => {
         <div className="w-full flex flex-col items-center mt-4 space-y-2 px-2">
           {["Meetings", "Availability", "Card Settings"].map((item, idx) => (
             <button
-              onClick={() => setComp(item)}
+              onClick={() => setDashboardComp(item)}
               key={idx}
               className={`w-full py-2.5 px-3 rounded-lg text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all duration-200 cursor-pointer text-start ${
-                item === comp && "bg-white/10 text-white"
+                item === dashboardComp && "bg-white/10 text-white"
               }`}
             >
               {item}
@@ -133,11 +113,9 @@ const Dashboard = () => {
         className="h-full w-[85%] flex justify-center items-center
        "
       >
-        {comp === "Availability" && <Availability />}
-        {comp === "Meetings" && <Meetings card={card} />}
+        {dashboardComp === "Availability" && <Availability />}
+        {dashboardComp === "Meetings" && <Meetings />}
       </div>
-
-      
     </div>
   );
 };
