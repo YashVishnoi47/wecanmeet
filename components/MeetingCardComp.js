@@ -30,8 +30,10 @@ const MeetingCardComp = () => {
   function onSubmit(values) {
     console.log(values);
   }
+
+
   return (
-    <div className="w-full h-full flex  justify-center items-center ">
+    <div className="w-full h-full flex justify-center gap-2 items-center ">
       {/* Owner Info */}
       <div className="w-[20%] h-[70%] bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl flex flex-col items-center gap-6 p-4 shadow-md">
         {/* Profile Picture */}

@@ -11,7 +11,7 @@ import dynamic from "next/dynamic";
 // Dynamic Components
 const Availability = dynamic(() => import("@/components/Availability"));
 const Meetings = dynamic(() => import("@/components/Meetings"));
-
+const CardSettings = dynamic(() => import("@/components/CardSettings"));
 
 const Dashboard = () => {
   const router = useRouter();
@@ -94,7 +94,7 @@ const Dashboard = () => {
 
         {/* Navigation */}
         <div className="w-full flex flex-col items-center mt-4 space-y-2 px-2">
-          {["Meetings", "Availability", "Card Settings"].map((item, idx) => (
+          {["Meetings", "Availability", "CardSettings"].map((item, idx) => (
             <button
               onClick={() => setDashboardComp(item)}
               key={idx}
@@ -115,6 +115,7 @@ const Dashboard = () => {
       >
         {dashboardComp === "Availability" && <Availability />}
         {dashboardComp === "Meetings" && <Meetings />}
+        {dashboardComp === "CardSettings" && <CardSettings session={session} />}
       </div>
     </div>
   );

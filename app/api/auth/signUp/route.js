@@ -47,14 +47,25 @@ export const POST = async (req) => {
         );
       }
 
-      // ✅ Update user with meetingCardId
+      // Update user with meetingCardId
       await User.findByIdAndUpdate(newUser._id, {
         MeetingCardID: card._id,
       });
 
+      const defaultDay = {
+        isWorking: false,
+        timeSlots: { start: "09:00", end: "17:00" },
+      };
+
       const newSchedule = await Schedule.create({
         meetingCardId: card._id,
-        // Add default schedule structure.
+        Monday: defaultDay,
+        Tuesday: defaultDay,
+        Wednesday: defaultDay,
+        Thursday: defaultDay,
+        Friday: defaultDay,
+        Saturday: defaultDay,
+        Sunday: defaultDay,
       });
 
       if (!newSchedule) {

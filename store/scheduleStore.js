@@ -2,7 +2,7 @@ import { boolean } from "zod";
 import { create } from "zustand";
 
 const UseScheduleStore = create((set) => ({
-  work: boolean,    
+  work: boolean,
   setWork: (work) => set({ work }),
 }));
 

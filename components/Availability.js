@@ -2,9 +2,8 @@
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { motion } from "framer-motion";
-import { Switch } from "@/components/ui/switch";
-import { Trash2 } from "lucide-react";
 import UpdateScheduleForm from "./UpdateScheduleForm";
+import Topbar from "./Topbar";
 
 const cardVariants = {
   hidden: { opacity: 0, y: 40 }, // Initial state: offscreen below
@@ -41,7 +40,7 @@ const Availability = () => {
         );
 
         const data = await res.json();
-        console.log("data", data);
+        // console.log("data", data);
 
         setSchedule(data.schedule);
 
@@ -57,45 +56,48 @@ const Availability = () => {
     fetchSchedule();
   }, [session?.user?.MeetingCardID]);
 
+  // Function to Save the updated Schedule.
+  const handleChange = (day, updatedDayData) => {
+    setSchedule((prev) => ({
+      ...prev,
+      [day]: updatedDayData,
+    }));
+  };
+
+  const handleSave = async () => {
+    try {
+      const res = await fetch("/api/schedule/updateSchedule", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          meetingCardId: session.user.MeetingCardID,
+          schedule,
+        }),
+      });
+
+      const result = await res.json();
+      if (res.ok) {
+        alert("Schedule updated successfully");
+      } else {
+        alert(result.error || "Error updating schedule");
+      }
+    } catch (error) {
+      console.error("Save error:", error);
+    }
+  };
+
   return (
     <div className="w-full h-full text-white flex flex-col justify-start items-center">
       {/* Header */}
-      <motion.div
-        initial={{ y: -30, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{
-          delay: 0.1,
-          duration: 0.5,
-          ease: "easeOut",
-          type: "spring",
-          stiffness: 100,
-          damping: 18,
-        }}
-        className="w-full border-b border-neutral-800 bg-black/30 backdrop-blur-md px-6 py-4 flex items-center justify-between rounded-t-xl shadow-sm"
-      >
-        {/* Left Section (Title & Subtitle) */}
-        <div className="flex flex-col">
-          <h1 className="text-2xl font-semibold text-white">Working Hours</h1>
-          <p className="text-sm text-neutral-400 mt-1">
-            Configure your available working hours for client bookings.
-          </p>
-        </div>
-
-        {/* Right Section (Button) */}
-        <div className="flex items-center justify-end">
-          <motion.button
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3, ease: "easeInOut" }}
-            className="px-5 py-2 rounded-lg border border-white/20 bg-white/5 text-white hover:bg-white hover:text-black hover:border-black backdrop-blur-md font-medium text-sm transition-all duration-200 active:scale-95 cursor-pointer"
-          >
-            Save
-          </motion.button>
-        </div>
-      </motion.div>
+      <Topbar
+        Heading={"Working Hours"}
+        text={" Configure your available working hours for client bookings."}
+        handleSave={handleSave}
+      />
 
       <div className="w-full hide-scrollbar h-[90%] flex flex-col px-4 mt-4 overflow-y-auto">
         {/* Days Section */}
+
         {schedule && (
           <motion.div
             variants={cardVariants}
@@ -105,11 +107,18 @@ const Availability = () => {
             className="w-full flex flex-wrap gap-6 justify-start items-start"
           >
             {days.map((day) => (
-              <UpdateScheduleForm key={day} day={day} dayData={schedule[day]} />
+              <UpdateScheduleForm
+                key={day}
+                day={day}
+                dayData={schedule[day]}
+                onChange={handleChange}
+              />
             ))}
           </motion.div>
         )}
       </div>
+
+      {/* <button onClick={handleSave}>Save</button> */}
     </div>
   );
 };
