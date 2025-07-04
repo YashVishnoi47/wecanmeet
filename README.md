@@ -1,4 +1,4 @@
-# Organised (In progress)
+# Openschedule (In progress)
 
 > A minimalist web-app for organising your meetings.
 
