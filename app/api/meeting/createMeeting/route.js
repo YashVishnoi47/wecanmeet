@@ -2,6 +2,7 @@ import Meeting from "@/lib/db/models/meetingModel";
 import User from "@/lib/db/models/userModel";
 import { connectDB } from "@/lib/db/database";
 import { NextResponse } from "next/server";
+import { sendMeetingEmail } from "@/lib/sendEmail";
 
 export const POST = async (req) => {
   await connectDB();
@@ -16,14 +17,14 @@ export const POST = async (req) => {
       ownerID,
     } = await req.json();
 
-    console.log(
-      clientName,
-      clientEmail,
-      clientMsg,
-      meetingDate,
-      meetingTime,
-      ownerID
-    );
+    // console.log(
+    //   clientName,
+    //   clientEmail,
+    //   clientMsg,
+    //   meetingDate,
+    //   meetingTime,
+    //   ownerID
+    // );
 
     if (
       !clientName ||

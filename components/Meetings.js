@@ -37,7 +37,7 @@ const Meetings = ({ handleComplete }) => {
         <button
           onClick={() => setFilter("pending")}
           className={`px-4 py-2 rounded-lg border transition-all duration-300 cursor-pointer ${
-            filter === "completed"
+            filter === "pending"
               ? "bg-white text-black"
               : "bg-black text-white hover:bg-white hover:text-black"
           }`}

@@ -90,7 +90,7 @@ const MeetingCardComp = ({ workingDays }) => {
         },
         body: JSON.stringify({
           clientName: "Name",
-          clientEmail: "Email@gmail.com",
+          clientEmail: "cubeer742@gmail.com",
           clientMsg: "MSG",
           meetingDate: formattedDate,
           meetingTime: time,

@@ -156,7 +156,7 @@ const Dashboard = () => {
 
           {/* Navigation */}
           <div className="w-full flex flex-col items-center mt-4 space-y-2 px-2">
-            {["Meetings", "Availability", "CardSettings"].map((item, idx) => (
+            {["Meetings", "Availability"].map((item, idx) => (
               <button
                 onClick={() => setDashboardComp(item)}
                 key={idx}
