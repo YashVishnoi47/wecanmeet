@@ -21,6 +21,12 @@ const UseUserStore = create((set) => ({
 
   userMeetings: "",
   setuserMeetings: (userMeetings) => set({ userMeetings }),
+
+  triggerMeetingFetch: false,
+  setTriggerMeetingFetch: (triggerMeetingFetch) => set({ triggerMeetingFetch }),
+
+  filter: "all",
+  setFilter: (filter) => set({ filter }),
 }));
 
 export default UseUserStore;

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
@@ -18,8 +18,39 @@ const CardSettings = dynamic(() => import("@/components/CardSettings"));
 const Dashboard = () => {
   const router = useRouter();
   const { data: session } = useSession();
-  const { setUserCard, userMeetings, setuserMeetings } = UseUserStore();
+  const {
+    setUserCard,
+    userMeetings,
+    setuserMeetings,
+    triggerMeetingFetch,
+    setTriggerMeetingFetch,
+  } = UseUserStore();
   const { dashboardComp, setDashboardComp } = UseCompStore();
+
+  const handleComplete = async (complete, meetingId) => {
+    if (!complete || !meetingId) return;
+    try {
+      const res = await fetch(
+        `/api/meeting/setMeetingDone?meetingId=${meetingId}&completed=${complete}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        console.log(data.error);
+      }
+      setTriggerMeetingFetch((prev) => !prev);
+      console.log("Meeting updated");
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   // Fetching Cards When the session is available
   useEffect(() => {
@@ -48,6 +79,7 @@ const Dashboard = () => {
     fetcCard();
   }, [session]);
 
+  // Fetching User Meetings.
   useEffect(() => {
     if (!session) return;
     const fetchMeeting = async () => {
@@ -72,7 +104,7 @@ const Dashboard = () => {
     };
 
     fetchMeeting();
-  }, [session]);
+  }, [session, triggerMeetingFetch]);
 
   if (!session) {
     return (
@@ -162,7 +194,9 @@ const Dashboard = () => {
        "
       >
         {dashboardComp === "Availability" && <Availability />}
-        {dashboardComp === "Meetings" && <Meetings />}
+        {dashboardComp === "Meetings" && (
+          <Meetings handleComplete={handleComplete} />
+        )}
         {dashboardComp === "CardSettings" && <CardSettings session={session} />}
       </div>
     </div>

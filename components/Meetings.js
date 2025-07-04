@@ -1,13 +1,18 @@
 "use client";
 import React from "react";
-import { useSession } from "next-auth/react";
 import UseUserStore from "@/store/userStore";
 import Topbar from "./Topbar";
 import { motion } from "framer-motion";
 import { CalendarDays, Clock, User, Mail } from "lucide-react";
+import { Button } from "./ui/button";
 
-const Meetings = () => {
-  const { userMeetings } = UseUserStore();
+const Meetings = ({ handleComplete }) => {
+  const { userMeetings, filter, setFilter } = UseUserStore();
+
+  const filteredMeetings = Object.values(userMeetings).filter((meeting) => {
+    if (filter === "pending") return meeting.completed === false;
+    return true;
+  });
 
   return (
     <div className="w-full h-full flex flex-col justify-between items-center">
@@ -16,22 +21,58 @@ const Meetings = () => {
         text="Here are your scheduled meetings."
       />
 
-      <div className="w-full h-[90%] flex justify-start items-start gap-6 p-4">
-        {userMeetings.length > 0
-          ? userMeetings.map((item, idx) => (
+      {/* Filter Buttons */}
+      <div className="w-full px-4 py-2 flex items-center gap-4 bg-black border-b border-white/10">
+        <button
+          onClick={() => setFilter("all")}
+          className={`px-4 py-2 rounded-lg border transition-all duration-300 cursor-pointer ${
+            filter === "all"
+              ? "bg-white text-black"
+              : "bg-black text-white hover:bg-white hover:text-black"
+          }`}
+        >
+          All Meetings
+        </button>
+
+        <button
+          onClick={() => setFilter("pending")}
+          className={`px-4 py-2 rounded-lg border transition-all duration-300 cursor-pointer ${
+            filter === "completed"
+              ? "bg-white text-black"
+              : "bg-black text-white hover:bg-white hover:text-black"
+          }`}
+        >
+          Pending
+        </button>
+      </div>
+
+      <div className="w-full h-[80%] flex justify-start flex-wrap items-start gap-6 p-4">
+        {filteredMeetings.length > 0
+          ? filteredMeetings.map((item, idx) => (
               <motion.div
                 initial={{ opacity: 0, y: 30 }} // Animate from below
                 key={idx}
                 animate={{ opacity: 1, y: 0 }} // Slide in
                 transition={{ duration: 0.4, ease: "easeOut" }} // Smooth
-                className="w-full max-w-md bg-neutral-900/80 border border-white/10 rounded-2xl p-6 backdrop-blur-lg shadow-lg text-white space-y-4 hover:shadow-white/10 transition-shadow duration-300"
+                className="w-full max-w-md bg-neutral-900/80 border border-white/10 rounded-2xl p-6 backdrop-blur-lg shadow-lg  text-white space-y-4 hover:shadow-white/10 transition-shadow duration-300"
               >
                 {/* Header */}
                 <div className="flex items-center justify-between">
                   <h2 className="text-xl font-semibold tracking-wide">
                     Meeting Info
                   </h2>
-                  <span className="text-sm text-white/40">Confirmed</span>
+                  {item.completed === false ? (
+                    <Button
+                      onClick={() => handleComplete(true, item._id)}
+                      className="text-sm text-red-400/40 cursor-pointer hover:text-red-400 hover:bg-red-200"
+                    >
+                      {item.completed === true ? "Completed" : "Pending"}{" "}
+                    </Button>
+                  ) : (
+                    <Button className="text-sm text-green-400/40">
+                      {item.completed === true ? "Completed" : "Pending"}{" "}
+                    </Button>
+                  )}
                 </div>
 
                 {/* Info Rows */}
