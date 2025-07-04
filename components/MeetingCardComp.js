@@ -1,36 +1,113 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/style.css";
-import { isBefore, today } from "date-fns";
-import { ScrollArea } from "@/components/ui/scroll-area";
-const MeetingCardComp = () => {
-  const [selected, setSelected] = useState("");
-  const [time, settime] = useState("");
-  const [step, setStep] = useState(false);
-  const disabledDays = (date) => {
-    const today = new Date();
-    const isPast = isBefore(date, today);
-    const isWeekendDay = [0, 6].includes(date.getDay());
-    return isPast || isWeekendDay;
+import UseLivePageStore from "@/store/LivepageStore";
+import { generateTimeSlots } from "@/lib/utils";
+import { useSession } from "next-auth/react";
+
+const MeetingCardComp = ({ workingDays }) => {
+  const { data: session } = useSession();
+  const today = new Date();
+  const {
+    schedule,
+    timeRange,
+    setTimeRange,
+    selected,
+    setSelected,
+    SelectedWeakDay,
+    setSelectedWeakDay,
+    time,
+    settime,
+    TimeFormat,
+    setTimeFormat,
+  } = UseLivePageStore();
+
+  const dayNameToNumber = {
+    Sunday: 0,
+    Monday: 1,
+    Tuesday: 2,
+    Wednesday: 3,
+    Thursday: 4,
+    Friday: 5,
+    Saturday: 6,
   };
-  const timeOptions = [
-    "09:00 AM",
-    "10:00 AM",
-    "11:00 AM",
-    "12:00 PM",
-    "01:00 PM",
-    "02:00 PM",
-    "03:00 PM",
-    "04:00 PM",
-    "05:00 PM",
+
+  // Computing Non-Working Days
+  const allDays = Object.keys(dayNameToNumber);
+  const nonWorkingDays = allDays.filter((day) => !workingDays.includes(day));
+  const disabledDays = [
+    { before: today },
+    ...nonWorkingDays.map((day) => ({
+      dayOfWeek: [dayNameToNumber[day]],
+    })),
   ];
 
-  function onSubmit(values) {
-    console.log(values);
-  }
+  //  Update week day when user selects a date
+  useEffect(() => {
+    if (selected) {
+      const weekDay = selected.toLocaleDateString("en-US", {
+        weekday: "long",
+      });
+      setSelectedWeakDay(weekDay);
+    }
+  }, [selected]);
 
+  // Time Slots
+  const timeOptions = generateTimeSlots(
+    timeRange.start,
+    timeRange.end,
+    30,
+    TimeFormat
+  );
+
+  //  When week day is updated, filter schedule
+  useEffect(() => {
+    if (SelectedWeakDay) {
+      const selectedDayData = Object.entries(schedule).filter(
+        ([day]) => day === SelectedWeakDay
+      );
+
+      console.log("Selected Day Schedule:", selectedDayData);
+      if (selectedDayData.length > 0) {
+        const dayData = selectedDayData[0][1];
+        const timeSlots = dayData.timeSlots;
+
+        setTimeRange({ start: timeSlots.start, end: timeSlots.end });
+      }
+    }
+  }, [SelectedWeakDay, schedule]);
+
+  // Function to conform the meeting.
+  const onSubmit = async () => {
+    try {
+      const formattedDate = selected.toISOString().split("T")[0];
+      const res = await fetch("/api/meeting/createMeeting", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          clientName: "Name",
+          clientEmail: "Email@gmail.com",
+          clientMsg: "MSG",
+          meetingDate: formattedDate,
+          meetingTime: time,
+          ownerID: session?.user._id,
+        }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        console.log(data.error);
+      }
+
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <div className="w-full h-full flex justify-center gap-2 items-center ">
@@ -95,13 +172,14 @@ const MeetingCardComp = () => {
           <div className="w-full border-t border-white/10 pt-4">
             {selected !== "" ? (
               <p className="text-center text-white text-sm sm:text-base font-medium flex justify-center items-center gap-2">
-                📅{" "}
-                {selected.toLocaleDateString("en-US", {
-                  weekday: "short",
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
+                {selected && `📅`}{" "}
+                {selected &&
+                  selected.toLocaleDateString("en-US", {
+                    weekday: "short",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
                 {time && <span>{time}</span>}
               </p>
             ) : (
@@ -122,7 +200,7 @@ const MeetingCardComp = () => {
           <p
             onClick={() => (time === item ? settime("") : settime(item))}
             key={idx}
-            className={`w-full text-center py-2 px-3 border border-white/20 rounded-xl cursor-pointer transition duration-200 hover:bg-white hover:text-black active:scale-95 ${
+            className={`w-full text-center py-2 px-3 border border-white/20 rounded-xl cursor-pointer transition duration-200 hover:bg-white hover:text-black active:scale-95 text-sm ${
               time === item && "bg-white  text-black"
             }`}
           >
@@ -130,6 +208,10 @@ const MeetingCardComp = () => {
           </p>
         ))}
       </div>
+
+      <button className="border-2 p-2 rounded-4xl" onClick={onSubmit}>
+        Book
+      </button>
     </div>
   );
 };

@@ -3,7 +3,7 @@ import React from "react";
 import MeetingCardComp from "./MeetingCardComp";
 import Topbar from "./Topbar";
 
-const CardSettings = ({ session }) => {
+const CardSettings = () => {
   const { userCard } = UseUserStore();
   return (
     <div className="w-full h-full flex flex-col justify-center items-center">

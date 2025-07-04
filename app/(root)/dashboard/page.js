@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import UseUserStore from "@/store/userStore";
 import UseCompStore from "@/store/componentStore";
 import dynamic from "next/dynamic";
+import { Radio } from "lucide-react";
+import Link from "next/link";
 
 // Dynamic Components
 const Availability = dynamic(() => import("@/components/Availability"));
@@ -16,7 +18,7 @@ const CardSettings = dynamic(() => import("@/components/CardSettings"));
 const Dashboard = () => {
   const router = useRouter();
   const { data: session } = useSession();
-  const { setUserCard } = UseUserStore();
+  const { setUserCard, userMeetings, setuserMeetings } = UseUserStore();
   const { dashboardComp, setDashboardComp } = UseCompStore();
 
   // Fetching Cards When the session is available
@@ -44,6 +46,32 @@ const Dashboard = () => {
     };
 
     fetcCard();
+  }, [session]);
+
+  useEffect(() => {
+    if (!session) return;
+    const fetchMeeting = async () => {
+      try {
+        const res = await fetch(
+          `/api/meeting/fetchMeetings?ownerID=${session?.user._id}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const data = await res.json();
+
+        if (res.ok) {
+          setuserMeetings(data.meetings);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchMeeting();
   }, [session]);
 
   if (!session) {
@@ -86,24 +114,44 @@ const Dashboard = () => {
   return (
     <div className="w-full h-screen bg-black text-white flex justify-start items-center">
       {/* side Bar */}
-      <div className="h-full w-[15%] flex flex-col items-center text-white shadow-md border-r border-white/10">
-        {/* Header */}
-        <div className="w-full h-[10%] border-b border-white/10 flex justify-start p-4 items-center text-4xl font-semibold tracking-wide">
-          User
+      <div className="h-full w-[15%] flex flex-col items-center justify-between text-white shadow-md border-r border-white/10">
+        {/* Navigation and header */}
+        <div className="w-full h-1/2 flex flex-col ">
+          {/* Header */}
+          <div className="w-full h-[20%] border-b border-white/10 flex justify-start p-4 items-center text-4xl font-semibold">
+            User
+          </div>
+
+          {/* Navigation */}
+          <div className="w-full flex flex-col items-center mt-4 space-y-2 px-2">
+            {["Meetings", "Availability", "CardSettings"].map((item, idx) => (
+              <button
+                onClick={() => setDashboardComp(item)}
+                key={idx}
+                className={`w-full py-2.5 px-3 rounded-lg text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all duration-200 cursor-pointer text-start ${
+                  item === dashboardComp && "bg-white/10 text-white"
+                }`}
+              >
+                {item}
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Navigation */}
-        <div className="w-full flex flex-col items-center mt-4 space-y-2 px-2">
-          {["Meetings", "Availability", "CardSettings"].map((item, idx) => (
-            <button
-              onClick={() => setDashboardComp(item)}
+        <div className="w-full flex flex-col items-center mb-4 space-y-2 px-2">
+          {["Your Live Page"].map((item, idx) => (
+            <Link
+              href={`/live/${session?.user.userName}`}
+              target="_blank"
+              // onClick={() => router.push(`/live/${session?.user.userName}`)}
               key={idx}
-              className={`w-full py-2.5 px-3 rounded-lg text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all duration-200 cursor-pointer text-start ${
+              className={`w-full flex gap-2 py-2.5 justify-start items-center px-3 rounded-lg text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all duration-200 cursor-pointer text-start ${
                 item === dashboardComp && "bg-white/10 text-white"
               }`}
             >
+              {item === "Your Live Page" && <Radio className="text-sm" />}
               {item}
-            </button>
+            </Link>
           ))}
         </div>
       </div>

@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 const UseCompStore = create((set) => ({
-  dashboardComp: "Availability",
+  dashboardComp: "Meetings",
   setDashboardComp: (dashboardComp) => set({ dashboardComp }),
 }));
 

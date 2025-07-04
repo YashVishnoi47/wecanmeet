@@ -18,6 +18,9 @@ const UseUserStore = create((set) => ({
 
   userCard: "",
   setUserCard: (userCard) => set({ userCard }),
+
+  userMeetings: "",
+  setuserMeetings: (userMeetings) => set({ userMeetings }),
 }));
 
 export default UseUserStore;
