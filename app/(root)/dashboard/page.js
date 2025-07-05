@@ -8,10 +8,18 @@ import UseUserStore from "@/store/userStore";
 import UseCompStore from "@/store/componentStore";
 import dynamic from "next/dynamic";
 import { Radio, UserCog } from "lucide-react";
+import { Menu } from "lucide-react";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import {
   Dialog,
   DialogContent,
@@ -42,19 +50,6 @@ const Dashboard = () => {
     userName: "",
     FullName: "",
   });
-
-  // Framer Motion variants.
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1 },
-    },
-  };
-  const itemVariants = {
-    hidden: { opacity: 0, y: 10 },
-    show: { opacity: 1, y: 0 },
-  };
 
   // Function to set the meeting done
   const handleComplete = async (complete, meetingId) => {
@@ -240,24 +235,77 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="w-full h-screen bg-black text-white flex justify-start items-center">
-      {/* side Bar */}
-      <div className="h-full w-[15%] flex flex-col items-center justify-between text-white shadow-md border-r border-white/10">
-        {/* Navigation and header */}
-        <div className="w-full h-1/2 flex flex-col ">
-          {/* Header */}
-          <div className="w-full h-[20%] border-b border-white/10 flex justify-start p-4 items-center text-4xl font-semibold">
-            User
+    <div className="w-full h-screen bg-black text-white flex flex-col md:flex-row">
+      {/* Mobile Topbar with Sheet Trigger */}
+      <div className="md:hidden w-full flex items-center justify-between px-4 py-3 border-b border-white/10 bg-black/80">
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="ghost" className="text-white px-2">
+              <Menu className="w-6 h-6" />
+            </Button>
+          </SheetTrigger>
+
+          <SheetContent side="left" className="bg-black text-white w-[70%] p-4">
+            <div className="flex flex-col gap-4">
+              <p className="font-semibold text-lg">{session?.user.FullName}</p>
+              {["Meetings", "Availability"].map((item) => (
+                <button
+                  key={item}
+                  onClick={() => setDashboardComp(item)}
+                  className={`text-left w-full px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
+                    item === dashboardComp
+                      ? "bg-white/10 text-white"
+                      : "text-white/70 hover:text-white hover:bg-white/10"
+                  }`}
+                >
+                  {item}
+                </button>
+              ))}
+              <Link
+                href={`/live/${session?.user.userName}`}
+                target="_blank"
+                className="flex items-center gap-2 px-3 py-2 rounded-md text-sm text-white/70 hover:text-white hover:bg-white/10"
+              >
+                <Radio className="w-4 h-4" />
+                Your Live Page
+              </Link>
+            </div>
+          </SheetContent>
+        </Sheet>
+        <p className="text-white text-lg font-semibold">Dashboard</p>
+      </div>
+
+      {/* Sidebar (Desktop Only) */}
+      <motion.div
+        initial={{ x: -100, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{
+          type: "spring",
+          stiffness: 120,
+          damping: 18,
+          mass: 0.5,
+          delay: 0.1,
+        }}
+        className="hidden md:flex h-full w-[15%] flex-col justify-between text-white bg-black/40 backdrop-blur-md border border-white/10 shadow-md rounded-2xl"
+      >
+        {/* Top section */}
+        <div className="w-full flex flex-col items-center gap-6 px-3 pt-6">
+          <div className="w-full flex items-center gap-4 p-4 border bg-black/70 border-white/20 rounded-2xl shadow-sm">
+            <div className="w-12 h-12 rounded-full border border-white/40 bg-white/20"></div>
+            <p className="text-lg font-semibold truncate capitalize">
+              {session?.user.FullName}
+            </p>
           </div>
 
-          {/* Navigation */}
-          <div className="w-full flex flex-col items-center mt-4 space-y-2 px-2">
+          <div className="w-full flex flex-col gap-2">
             {["Meetings", "Availability"].map((item, idx) => (
               <button
-                onClick={() => setDashboardComp(item)}
                 key={idx}
-                className={`w-full py-2.5 px-3 rounded-lg text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all duration-200 cursor-pointer text-start ${
-                  item === dashboardComp && "bg-white/10 text-white"
+                onClick={() => setDashboardComp(item)}
+                className={`w-full px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 text-left ${
+                  item === dashboardComp
+                    ? "bg-white/10 text-white"
+                    : "text-white/70 hover:text-white hover:bg-white/10"
                 }`}
               >
                 {item}
@@ -266,30 +314,25 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="w-full flex flex-col items-center mb-4 space-y-2 px-2">
-          {["Your Live Page"].map((item, idx) => (
-            <Link
-              href={`/live/${session?.user.userName}`}
-              target="_blank"
-              key={idx}
-              className={`w-full flex gap-2 py-2.5 justify-start items-center px-3 rounded-lg text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all duration-200 cursor-pointer text-start ${
-                item === dashboardComp && "bg-white/10 text-white"
-              }`}
-            >
-              {item === "Your Live Page" && <Radio className="text-sm" />}
-              {item}
-            </Link>
-          ))}
-          {/* Profile Settings dialog box */}
+        {/* Bottom Section */}
+        <div className="w-full flex flex-col gap-2 px-3 pb-6">
+          <Link
+            href={`/live/${session?.user.userName}`}
+            target="_blank"
+            className="w-full flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-white/70 hover:text-white hover:bg-white/10 transition-colors"
+          >
+            <Radio className="w-4 h-4" />
+            Your Live Page
+          </Link>
 
           <Dialog>
             <DialogTrigger asChild>
-              <button className="w-full flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition-colors duration-200 cursor-pointer">
+              <button className="w-full flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-white/70 hover:text-white hover:bg-white/10">
                 <UserCog className="w-5 h-5" />
                 Profile Settings
               </button>
             </DialogTrigger>
+            <DialogTitle></DialogTitle>
 
             <DialogContent className="sm:max-w-lg w-full border-none bg-black text-white p-6 max-h-[80vh] overflow-y-auto">
               <motion.div
@@ -298,27 +341,17 @@ const Dashboard = () => {
                 transition={{ type: "spring", stiffness: 200, damping: 20 }}
                 className="space-y-6"
               >
-                {/* Header section */}
                 <DialogHeader>
-                  {/* Title */}
                   <DialogTitle className="text-2xl font-semibold">
                     Edit Your Profile
                   </DialogTitle>
-                  {/* Description */}
                   <DialogDescription className="text-gray-400">
                     Update your personal information below.
                   </DialogDescription>
                 </DialogHeader>
 
-                {/* Form fields */}
-                <motion.div
-                  variants={containerVariants}
-                  initial="hidden"
-                  animate="show"
-                  className="grid grid-cols-1 gap-4"
-                >
-                  {/* Name field */}
-                  <motion.div variants={itemVariants}>
+                <div className="grid grid-cols-1 gap-4">
+                  <div>
                     <Label htmlFor="name">Full Name</Label>
                     <Input
                       id="name"
@@ -330,12 +363,10 @@ const Dashboard = () => {
                           FullName: e.target.value,
                         }))
                       }
-                      className="bg-white/10 border border-white/30 text-white placeholder-gray-500 mt-1 rounded-md focus:border-white transition-colors duration-150"
+                      className="bg-white/10 border border-white/30 text-white placeholder-gray-500 mt-1 rounded-md focus:border-white"
                     />
-                  </motion.div>
-
-                  {/* Username field */}
-                  <motion.div variants={itemVariants}>
+                  </div>
+                  <div>
                     <Label htmlFor="username">Username</Label>
                     <Input
                       id="username"
@@ -347,12 +378,10 @@ const Dashboard = () => {
                           userName: e.target.value,
                         }))
                       }
-                      className="bg-white/10 border border-white/30 text-white placeholder-gray-500 mt-1 rounded-md  focus:border-white transition-colors duration-150"
+                      className="bg-white/10 border border-white/30 text-white placeholder-gray-500 mt-1 rounded-md focus:border-white"
                     />
-                  </motion.div>
-
-                  {/* Email field */}
-                  <motion.div variants={itemVariants}>
+                  </div>
+                  <div>
                     <Label htmlFor="email">Email Address</Label>
                     <Input
                       id="email"
@@ -365,42 +394,21 @@ const Dashboard = () => {
                           email: e.target.value,
                         }))
                       }
-                      className="bg-white/10 border border-white/30 text-white placeholder-gray-500 mt-1 rounded-md  focus:border-white transition-colors duration-150"
+                      className="bg-white/10 border border-white/30 text-white placeholder-gray-500 mt-1 rounded-md focus:border-white"
                     />
-                  </motion.div>
+                  </div>
+                </div>
 
-                  {/* Bio field */}
-                  {/* <motion.div variants={itemVariants}>
-                    <Label htmlFor="bio">Bio</Label>
-                    <Textarea
-                      id="bio"
-                      name="bio"
-                      // value={tempData.bio}
-                      // onChange={handleChange}
-                      rows={3}
-                      className="bg-white/10 border border-white/30 text-white placeholder-gray-500 mt-1 rounded-md  focus:border-white 
-                  transition-colors duration-150
-                "
-                    />
-                  </motion.div> */}
-                </motion.div>
-
-                {/* Footer actions */}
                 <DialogFooter className="flex justify-end gap-3">
-                  {/* Cancel button */}
                   <Button
                     variant="outline"
-                    className="text-black border-white hover:bg-white/10 hover:text-white transition-colors duration-150 cursor-pointer"
+                    className="border-white text-white hover:bg-white/10 hover:text-white"
                   >
                     Cancel
                   </Button>
-                  {/* Save button */}
                   <Button
                     onClick={updateUser}
-                    className="
-                bg-white text-black hover:bg-black hover:text-white 
-                border border-white transition-all duration-200 cursor-pointer
-              "
+                    className="bg-white text-black hover:bg-black hover:text-white border border-white"
                   >
                     Save Changes
                   </Button>
@@ -409,13 +417,10 @@ const Dashboard = () => {
             </DialogContent>
           </Dialog>
         </div>
-      </div>
+      </motion.div>
 
-      {/* Main */}
-      <div
-        className="h-full w-[85%] flex justify-center items-center
-       "
-      >
+      {/* Main Content */}
+      <div className="w-full md:w-[85%] h-full overflow-y-auto">
         {dashboardComp === "Availability" && <Availability />}
         {dashboardComp === "Meetings" && (
           <Meetings handleComplete={handleComplete} />

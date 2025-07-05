@@ -87,13 +87,16 @@ const Availability = () => {
   };
 
   return (
-    <div className="w-full h-full text-white flex flex-col justify-start items-center">
+    <div className="w-full h-[98%] text-white flex flex-col justify-start items-center">
       {/* Header */}
-      <Topbar
-        Heading={"Working Hours"}
-        text={" Configure your available working hours for client bookings."}
-        handleSave={handleSave}
-      />
+
+      <div className="w-[98%] flex justify-center items-center py-4">
+        <Topbar
+          Heading={"Working Hours"}
+          text={" Configure your available working hours for client bookings."}
+          handleSave={handleSave}
+        />
+      </div>
 
       <div className="w-full hide-scrollbar h-[90%] flex flex-col px-4 mt-4 overflow-y-auto">
         {/* Days Section */}
