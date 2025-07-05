@@ -2,7 +2,6 @@ import Meeting from "@/lib/db/models/meetingModel";
 import User from "@/lib/db/models/userModel";
 import { connectDB } from "@/lib/db/database";
 import { NextResponse } from "next/server";
-import { sendMeetingEmail } from "@/lib/sendEmail";
 
 export const POST = async (req) => {
   await connectDB();

@@ -27,6 +27,9 @@ const UseUserStore = create((set) => ({
 
   filter: "all",
   setFilter: (filter) => set({ filter }),
+
+  fetchedUser: "all",
+  setFetchedUser: (fetchedUser) => set({ fetchedUser }),
 }));
 
 export default UseUserStore;

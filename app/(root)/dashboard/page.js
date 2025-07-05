@@ -1,14 +1,26 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import UseUserStore from "@/store/userStore";
 import UseCompStore from "@/store/componentStore";
 import dynamic from "next/dynamic";
-import { Radio } from "lucide-react";
+import { Radio, UserCog } from "lucide-react";
 import Link from "next/link";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 // Dynamic Components
 const Availability = dynamic(() => import("@/components/Availability"));
@@ -20,13 +32,31 @@ const Dashboard = () => {
   const { data: session } = useSession();
   const {
     setUserCard,
-    userMeetings,
     setuserMeetings,
     triggerMeetingFetch,
     setTriggerMeetingFetch,
   } = UseUserStore();
   const { dashboardComp, setDashboardComp } = UseCompStore();
+  const [userDetails, SetuserDetails] = useState({
+    email: "",
+    userName: "",
+    FullName: "",
+  });
 
+  // Framer Motion variants.
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1 },
+    },
+  };
+  const itemVariants = {
+    hidden: { opacity: 0, y: 10 },
+    show: { opacity: 1, y: 0 },
+  };
+
+  // Function to set the meeting done
   const handleComplete = async (complete, meetingId) => {
     if (!complete || !meetingId) return;
     try {
@@ -106,6 +136,71 @@ const Dashboard = () => {
     fetchMeeting();
   }, [session, triggerMeetingFetch]);
 
+  // function to fetch User details.
+  const fetchUserDetails = async () => {
+    try {
+      const res = await fetch(
+        `/api/user/fetchUserDetails?userID=${session.user._id}&userDetails=${userDetails}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const data = await res.json();
+      // console.log("data", data);
+
+      if (!res.ok) {
+        console.log(data.error);
+      }
+
+      if (data) {
+        SetuserDetails({
+          email: data.user.Email,
+          userName: data.user.userName,
+          FullName: data.user.FullName,
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    if (!session) return;
+    fetchUserDetails();
+  }, [session]);
+
+  // Function to update user
+  const updateUser = async () => {
+    try {
+      const res = await fetch("/api/user/updateUser", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: session.user._id,
+          email: userDetails.email,
+          FullName: userDetails.FullName,
+          userName: userDetails.userName,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        console.error("Update error:", data.error);
+        return;
+      }
+
+      console.log("User updated successfully:", data.user);
+    } catch (error) {
+      console.error("Error updating user:", error);
+    }
+  };
+
   if (!session) {
     return (
       <div className="w-full h-screen bg-black text-white flex flex-col items-center justify-center px-4">
@@ -143,6 +238,7 @@ const Dashboard = () => {
       </div>
     );
   }
+
   return (
     <div className="w-full h-screen bg-black text-white flex justify-start items-center">
       {/* side Bar */}
@@ -170,12 +266,12 @@ const Dashboard = () => {
           </div>
         </div>
 
+        {/* Footer */}
         <div className="w-full flex flex-col items-center mb-4 space-y-2 px-2">
           {["Your Live Page"].map((item, idx) => (
             <Link
               href={`/live/${session?.user.userName}`}
               target="_blank"
-              // onClick={() => router.push(`/live/${session?.user.userName}`)}
               key={idx}
               className={`w-full flex gap-2 py-2.5 justify-start items-center px-3 rounded-lg text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all duration-200 cursor-pointer text-start ${
                 item === dashboardComp && "bg-white/10 text-white"
@@ -185,6 +281,133 @@ const Dashboard = () => {
               {item}
             </Link>
           ))}
+          {/* Profile Settings dialog box */}
+
+          <Dialog>
+            <DialogTrigger asChild>
+              <button className="w-full flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition-colors duration-200 cursor-pointer">
+                <UserCog className="w-5 h-5" />
+                Profile Settings
+              </button>
+            </DialogTrigger>
+
+            <DialogContent className="sm:max-w-lg w-full border-none bg-black text-white p-6 max-h-[80vh] overflow-y-auto">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                className="space-y-6"
+              >
+                {/* Header section */}
+                <DialogHeader>
+                  {/* Title */}
+                  <DialogTitle className="text-2xl font-semibold">
+                    Edit Your Profile
+                  </DialogTitle>
+                  {/* Description */}
+                  <DialogDescription className="text-gray-400">
+                    Update your personal information below.
+                  </DialogDescription>
+                </DialogHeader>
+
+                {/* Form fields */}
+                <motion.div
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate="show"
+                  className="grid grid-cols-1 gap-4"
+                >
+                  {/* Name field */}
+                  <motion.div variants={itemVariants}>
+                    <Label htmlFor="name">Full Name</Label>
+                    <Input
+                      id="name"
+                      name="name"
+                      value={userDetails.FullName}
+                      onChange={(e) =>
+                        SetuserDetails((prev) => ({
+                          ...prev,
+                          FullName: e.target.value,
+                        }))
+                      }
+                      className="bg-white/10 border border-white/30 text-white placeholder-gray-500 mt-1 rounded-md focus:border-white transition-colors duration-150"
+                    />
+                  </motion.div>
+
+                  {/* Username field */}
+                  <motion.div variants={itemVariants}>
+                    <Label htmlFor="username">Username</Label>
+                    <Input
+                      id="username"
+                      name="username"
+                      value={userDetails.userName}
+                      onChange={(e) =>
+                        SetuserDetails((prev) => ({
+                          ...prev,
+                          userName: e.target.value,
+                        }))
+                      }
+                      className="bg-white/10 border border-white/30 text-white placeholder-gray-500 mt-1 rounded-md  focus:border-white transition-colors duration-150"
+                    />
+                  </motion.div>
+
+                  {/* Email field */}
+                  <motion.div variants={itemVariants}>
+                    <Label htmlFor="email">Email Address</Label>
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      value={userDetails.email}
+                      onChange={(e) =>
+                        SetuserDetails((prev) => ({
+                          ...prev,
+                          email: e.target.value,
+                        }))
+                      }
+                      className="bg-white/10 border border-white/30 text-white placeholder-gray-500 mt-1 rounded-md  focus:border-white transition-colors duration-150"
+                    />
+                  </motion.div>
+
+                  {/* Bio field */}
+                  {/* <motion.div variants={itemVariants}>
+                    <Label htmlFor="bio">Bio</Label>
+                    <Textarea
+                      id="bio"
+                      name="bio"
+                      // value={tempData.bio}
+                      // onChange={handleChange}
+                      rows={3}
+                      className="bg-white/10 border border-white/30 text-white placeholder-gray-500 mt-1 rounded-md  focus:border-white 
+                  transition-colors duration-150
+                "
+                    />
+                  </motion.div> */}
+                </motion.div>
+
+                {/* Footer actions */}
+                <DialogFooter className="flex justify-end gap-3">
+                  {/* Cancel button */}
+                  <Button
+                    variant="outline"
+                    className="text-black border-white hover:bg-white/10 hover:text-white transition-colors duration-150 cursor-pointer"
+                  >
+                    Cancel
+                  </Button>
+                  {/* Save button */}
+                  <Button
+                    onClick={updateUser}
+                    className="
+                bg-white text-black hover:bg-black hover:text-white 
+                border border-white transition-all duration-200 cursor-pointer
+              "
+                  >
+                    Save Changes
+                  </Button>
+                </DialogFooter>
+              </motion.div>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
