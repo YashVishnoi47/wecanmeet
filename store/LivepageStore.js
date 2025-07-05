@@ -27,6 +27,9 @@ const UseLivePageStore = create((set) => ({
 
   TimeFormat: "12hr",
   setTimeFormat: (TimeFormat) => set({ TimeFormat }),
+
+  step: 1,
+  setStep: (step) => set({ step }),
 }));
 
 export default UseLivePageStore;
