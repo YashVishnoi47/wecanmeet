@@ -1,15 +1,15 @@
-"use client"
+"use client";
 import React from "react";
 import { motion } from "framer-motion";
 import { Github } from "lucide-react";
-import Image from "next/image";
+// import { useRouter } from "next/navigation";
 import VisitGiub from "@/components/Github";
-
-
-
+import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 const HeroSection = () => {
-
+  const { data: session } = useSession();
+  // const router = useRouter();
   return (
     <div className="w-full flex justify-center items-start min-h-[89%] px-4">
       <div className="w-full max-w-7xl h-full flex justify-center items-center pt-8">
@@ -48,14 +48,21 @@ const HeroSection = () => {
           </motion.p>
 
           {/* Call to Action Button */}
-          <motion.button
-            className="mt-4 px-6 py-3 bg-black text-white text-base md:text-lg font-semibold rounded-full hover:bg-gray-800 transition-all duration-300"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 300 }}
-          >
-            Get Started for Free
-          </motion.button>
+          {session ? (
+            <Link
+              className="mt-4 px-6 py-3 bg-black text-white text-base md:text-lg font-semibold rounded-full hover:bg-gray-800 transition-all duration-300"
+              href={"/dashboard"}
+            >
+              Go to Dashboard
+            </Link>
+          ) : (
+            <Link
+              className="mt-4 px-6 py-3 bg-black text-white text-base md:text-lg font-semibold rounded-full hover:bg-gray-800 transition-all duration-300"
+              href={"/sign-up"}
+            >
+              Get Started for Free
+            </Link>
+          )}
 
           {/* Target Audience Pills */}
           <motion.div

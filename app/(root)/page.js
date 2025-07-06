@@ -11,9 +11,9 @@ export default function Home() {
       <HeroSection />
 
       {/* Scroll Indicator */}
-      <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 text-sm text-gray-400 animate-bounce">
+      {/* <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 text-sm text-gray-400 animate-bounce">
         ↓ Scroll to explore more
-      </div>
+      </div> */}
     </div>
   );
 }

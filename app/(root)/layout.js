@@ -5,7 +5,7 @@ import AuthProvider from "@/context/AuthProvider";
 const rubik = Rubik({ subsets: ["latin"], variable: "--font-rubik" });
 
 export const metadata = {
-  title: "Organised",
+  title: "wecanmeet",
   description: "A minimalist Web-App for organising your Meetings ",
 };
 

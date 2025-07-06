@@ -11,7 +11,6 @@ export default function VisitGithub() {
       target="_blank"
       className="mb-1 px-3 py-1.5 bg-[#0D1117] text-white border border-white/10 flex justify-center items-center gap-2 text-sm md:text-base font-medium rounded-full"
     >
-      Visit us on
       <motion.span
         className="inline-flex items-center gap-1 font-semibold transition-colors duration-200 cursor-pointer"
         animate={{ scale: [1, 1.05, 1] }}
