@@ -77,6 +77,32 @@ const Dashboard = () => {
     }
   };
 
+  // Function to Cancel Meeting.
+  const handleCancelMeeting = async (meetingId) => {
+    try {
+      const res = await fetch("/api/meeting/cancelMeeting", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ meetingId: meetingId }),
+      });
+
+      const data = await res.json();
+      console.log(data);
+
+      if (!res.ok) {
+        console.log(data.error);
+      }
+
+
+      setTriggerMeetingFetch((prev) => !prev);
+      console.log(data.success);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   // Fetching Cards When the session is available
   useEffect(() => {
     if (!session?.user?._id) return;
@@ -423,7 +449,10 @@ const Dashboard = () => {
       <div className="w-full md:w-[85%] h-full overflow-y-auto">
         {dashboardComp === "Availability" && <Availability />}
         {dashboardComp === "Meetings" && (
-          <Meetings handleComplete={handleComplete} />
+          <Meetings
+            handleCancelMeeting={handleCancelMeeting}
+            handleComplete={handleComplete}
+          />
         )}
         {dashboardComp === "CardSettings" && <CardSettings session={session} />}
       </div>

@@ -15,11 +15,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import Image from "next/image";
 
 const Navbar = () => {
   const router = useRouter();
   const { data: session } = useSession();
-
   const [isMobile, setIsMobile] = useState(false);
 
   // Handle screen size
@@ -31,25 +31,26 @@ const Navbar = () => {
   }, []);
 
   return (
-    <div className="w-full h-20 flex justify-center items-center px-4 md:px-0">
+    <div className="w-full relative h-[11%] border-black flex justify-center items-center px-4 md:px-0">
       <motion.div
-        initial={{ width: "12%" }}
-        animate={{ width: "100%", maxWidth: "1200px" }}
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
         transition={{ duration: 1, type: "spring", delay: 0.5 }}
-        className="h-[80%] border-2 rounded-xl flex justify-between items-center px-4 md:px-6"
+        className="min-h-[80%] w-[60%] border-2 rounded-xl flex justify-between items-center px-4"
       >
         {/* Left section */}
-        <div className="h-full flex items-center gap-6">
+        <div className="h-full flex items-center gap-6 w-1/2">
           {/* Logo */}
           <h1
             onClick={() => router.push("/")}
             className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 cursor-pointer select-none"
           >
-            Organised
+            wecanmeet
+            {/* <Image src={"./wecanmeet2.svg"} height={80} width={80} alt="logo" /> */}
           </h1>
 
           {/* Navigation Links (Desktop only) */}
-          <div className="hidden md:flex gap-6 items-center ml-6">
+          {/* <div className="hidden md:flex gap-6 items-center ml-6">
             {["Features", "How to use"].map((item) => (
               <motion.p
                 key={item}
@@ -61,12 +62,12 @@ const Navbar = () => {
                 {item}
               </motion.p>
             ))}
-          </div>
+          </div> */}
         </div>
 
         {/* Right Section */}
         {!isMobile ? (
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 border-black justify-end">
             {!session ? (
               <>
                 <CommonButton link="/sign-in" text="Log in" />

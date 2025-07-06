@@ -4,7 +4,6 @@ import UseUserStore from "@/store/userStore";
 import Topbar from "./Topbar";
 import { motion } from "framer-motion";
 import { CalendarDays, Clock, User, Mail } from "lucide-react";
-import { Button } from "./ui/button";
 import {
   Dialog,
   DialogContent,
@@ -13,7 +12,19 @@ import {
   DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
-const Meetings = ({ handleComplete }) => {
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
+const Meetings = ({ handleComplete, handleCancelMeeting }) => {
   const { userMeetings, filter, setFilter } = UseUserStore();
 
   const filteredMeetings = Object.values(userMeetings).filter((meeting) => {
@@ -34,32 +45,30 @@ const Meetings = ({ handleComplete }) => {
       {/* Main Container*/}
       <div className="w-[98%] h-[80%] bg-black/40 backdrop-blur-md border-white/10  rounded-2xl overflow-hidden flex flex-col gap-6">
         {/* Filter Buttons  */}
-        {filteredMeetings.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.7 }}
-            className="w-full px-2 flex items-center  gap-3 border-/10 bg-black/30"
-          >
-            {[
-              { label: "All Meetings", value: "all" },
-              { label: "Pending", value: "pending" },
-            ].map(({ label, value }) => (
-              <button
-                key={value}
-                onClick={() => setFilter(value)}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-300 border border-white/20 
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.7 }}
+          className="w-full px-2 flex items-center  gap-3 border-/10 bg-black/30"
+        >
+          {[
+            { label: "All Meetings", value: "all" },
+            { label: "Pending", value: "pending" },
+          ].map(({ label, value }) => (
+            <button
+              key={value}
+              onClick={() => setFilter(value)}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-300 border border-white/20 
           ${
             filter === value
               ? "bg-white text-black"
               : "bg-white/5 text-white hover:bg-white hover:text-black"
           }`}
-              >
-                {label}
-              </button>
-            ))}
-          </motion.div>
-        )}
+            >
+              {label}
+            </button>
+          ))}
+        </motion.div>
 
         {/* Meeting Cards Grid */}
         <div className="w-full h-full flex flex-wrap gap-6 overflow-y-auto items-start">
@@ -182,15 +191,66 @@ const Meetings = ({ handleComplete }) => {
                       </div>
                     )}
 
-                    {/* Mark Complete */}
-                    {!item.completed && (
-                      <button
-                        onClick={() => handleComplete(true, item._id)}
-                        className="mt-4 px-4 py-2 bg-white/10 text-red-400 hover:text-red-200 border border-white/20 rounded-md transition-all duration-200"
-                      >
-                        Mark as Completed
-                      </button>
-                    )}
+                    {/* Action buttons */}
+                    <div className="w-full flex gap-4">
+                      {/* Mark Complete */}
+                      {!item.completed && (
+                        <button
+                          onClick={() => handleComplete(true, item._id)}
+                          className="mt-4 px-4 py-2 bg-white/10 text-green-400 hover:text-green-200 border border-white/20 rounded-md transition-all duration-200 cursor-pointer"
+                        >
+                          Mark as Completed
+                        </button>
+                      )}
+
+                      {/* Cancel or delete meeting */}
+                      <AlertDialog>
+                        {/* Trigger Button */}
+                        <AlertDialogTrigger asChild>
+                          <button className="mt-4 px-4 py-2 flex items-center gap-2 text-sm font-medium text-red-400 border border-white/20 bg-white/10 rounded-md hover:text-red-300 hover:bg-white/5 transition-all duration-200 cursor-pointer">
+                            {!item.completed
+                              ? " Cancel Meeting"
+                              : "Delete Meeting"}
+                          </button>
+                        </AlertDialogTrigger>
+
+                        {/* Dialog Content */}
+                        <AlertDialogContent className="bg-black text-white border border-white/10 rounded-xl shadow-md backdrop-blur-md">
+                          <AlertDialogHeader>
+                            {/* Title */}
+                            <AlertDialogTitle className="text-lg font-semibold">
+                              {!item.completed
+                                ? "Are you sure you want to cancel the meeting?"
+                                : "Are you sure you want to Delete the meeting?"}
+                            </AlertDialogTitle>
+
+                            {/* Description */}
+                            <AlertDialogDescription className="text-sm text-white/60 mt-2">
+                              This action cannot be undone. This will
+                              permanently delete the meeting from your schedule.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+
+                          {/* Footer Buttons */}
+                          <AlertDialogFooter className="mt-4">
+                            {/* Cancel Button */}
+                            <AlertDialogCancel className="text-sm border border-white/20 text-white bg-white/10 hover:bg-white/20 transition-all duration-200 rounded-md px-4 py-2">
+                              Cancel
+                            </AlertDialogCancel>
+
+                            {/* Confirm Button */}
+                            <AlertDialogAction
+                              onClick={() => handleCancelMeeting(item._id)}
+                              className="text-sm border border-red-400 text-red-400 bg-transparent hover:bg-red-500 hover:text-white transition-all duration-200 rounded-md px-4 py-2"
+                            >
+                              {!item.completed
+                                ? " Confirm Cancel"
+                                : " Confirm Delete"}
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
                   </div>
                 </DialogContent>
               </Dialog>
