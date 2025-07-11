@@ -14,16 +14,20 @@ export const POST = async (req) => {
       meetingDate,
       meetingTime,
       ownerID,
+      meetingDuration,
+      meetingMode,
     } = await req.json();
 
-    // console.log(
-    //   clientName,
-    //   clientEmail,
-    //   clientMsg,
-    //   meetingDate,
-    //   meetingTime,
-    //   ownerID
-    // );
+    console.log(
+      clientName,
+      clientEmail,
+      clientMsg,
+      meetingDate,
+      meetingTime,
+      ownerID,
+      meetingDuration,
+      meetingMode
+    );
 
     if (
       !clientName ||
@@ -46,6 +50,8 @@ export const POST = async (req) => {
       meetingdate: meetingDate,
       meetingTime: meetingTime,
       ownerID: ownerID,
+      meetingMode: meetingMode,
+      meetingDuration: meetingDuration,
     });
 
     await User.findByIdAndUpdate(ownerID, {
