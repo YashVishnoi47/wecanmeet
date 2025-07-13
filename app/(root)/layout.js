@@ -14,7 +14,7 @@ export default function RootLayout({ children }) {
     <AuthProvider>
       <html lang="en">
         <body
-          className={`${rubik.className} antialiased selection:bg-gray-500 selection:text-white`}
+          className={`${rubik.className} antialiased selection:bg-gray-500 selection:text-white w-full min-h-screen`}
         >
           {children}
         </body>

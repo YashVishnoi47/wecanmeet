@@ -37,6 +37,8 @@ const MeetingCardComp = ({ workingDays }) => {
     TimeFormat,
     step,
     setStep,
+    meetting,
+    setMeetting,
   } = UseLivePageStore();
 
   const dayNameToNumber = {
@@ -122,7 +124,8 @@ const MeetingCardComp = ({ workingDays }) => {
         console.log(data.error);
       }
 
-      console.log(data);
+      // console.log(data);
+      setMeetting(data.meeting);
     } catch (error) {
       console.error(error);
     }
@@ -136,7 +139,6 @@ const MeetingCardComp = ({ workingDays }) => {
   return (
     <div className="w-full h-full flex justify-center gap-2 items-center">
       <div className="w-full h-full flex flex-col justify-center items-center ">
-        {/* Other comonents */}
         <div className="w-full h-full flex justify-center items-center bg-gradient-to-br from-black via-[#0a0a0a] to-[#111] px-6 py-8">
           <div className="w-[90%] max-w-6xl h-[85%] bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl shadow-2xl flex justify-between items-center overflow-hidden">
             {/* Sidebar (User + Meeting Info) */}

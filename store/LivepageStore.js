@@ -30,6 +30,9 @@ const UseLivePageStore = create((set) => ({
 
   step: 1,
   setStep: (step) => set({ step }),
+
+  meetting: null,
+  setMeetting: (meetting) => set({ meetting }),
 }));
 
 export default UseLivePageStore;

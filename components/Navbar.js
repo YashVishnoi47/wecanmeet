@@ -31,12 +31,12 @@ const Navbar = () => {
   }, []);
 
   return (
-    <div className="w-full relative h-[11%] border-black flex justify-center items-center px-4 md:px-0">
+    <div className="w-full relative h-[7%] flex justify-center items-center px-4 md:px-0">
       <motion.div
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 1, type: "spring", delay: 0.5 }}
-        className="min-h-[80%] w-[60%] border-2 rounded-xl flex justify-between items-center px-4"
+        className="min-h-[80%] w-[80%]  rounded-xl flex justify-between items-center px-4"
       >
         {/* Left section */}
         <div className="h-full flex items-center gap-6 w-1/2">

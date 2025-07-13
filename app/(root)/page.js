@@ -1,19 +1,16 @@
+import DummyMeetingCard from "@/components/DummyMeetingcard";
 import HeroSection from "@/components/HeroSection";
 import Navbar from "@/components/Navbar";
 
 export default function Home() {
   return (
-    <div className=" text-black h-screen relative">
-      {/* Navbar */}
-      <Navbar />
+    <>
+      <div className="text-black  h-[150vh] border-2 border-black relative bg-gradient-to-br from-white via-gray-100 to-gray-50">
+        <Navbar />
+        <HeroSection />
 
-      {/* Hero Section */}
-      <HeroSection />
-
-      {/* Scroll Indicator */}
-      {/* <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 text-sm text-gray-400 animate-bounce">
-        ↓ Scroll to explore more
-      </div> */}
-    </div>
+        <DummyMeetingCard /> {/* Meeting Card */}
+      </div>
+    </>
   );
 }
