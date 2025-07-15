@@ -1,0 +1,30 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="48"
+  height="48"
+  viewBox="0 0 24 24"
+  fill="none"
+>
+  <!-- Calendar base -->
+  <rect x="2" y="4" width="20" height="18" rx="2" ry="2" fill="#E0F7FA" />
+
+  <!-- Calendar top bar -->
+  <rect x="2" y="4" width="20" height="4" fill="#00BCD4" />
+
+  <!-- Calendar rings -->
+  <circle cx="7" cy="4" r="1" fill="#00796B" />
+  <circle cx="17" cy="4" r="1" fill="#00796B" />
+
+  <!-- Clock face -->
+  <circle cx="16" cy="15" r="4" fill="#FFF8E1" stroke="#FFC107" strokeWidth="1.5" />
+
+  <!-- Clock hands -->
+  <line x1="16" y1="15" x2="16" y2="13" stroke="#FFC107" strokeWidth="1.5" strokeLinecap="round" />
+  <line x1="16" y1="15" x2="18" y2="15" stroke="#FFC107" strokeWidth="1.5" strokeLinecap="round" />
+
+  <!-- Calendar dots -->
+  <circle cx="6" cy="10" r="1" fill="#0288D1" />
+  <circle cx="10" cy="10" r="1" fill="#0288D1" />
+  <circle cx="6" cy="14" r="1" fill="#0288D1" />
+  <circle cx="10" cy="14" r="1" fill="#0288D1" />
+</svg>

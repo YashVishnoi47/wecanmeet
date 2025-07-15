@@ -28,7 +28,7 @@ const Navbar = () => {
     mass: 1,
   });
 
-  const top = useTransform(scrollY, [0, 60], ["3px", "6px"]);
+  const top = useTransform(scrollY, [0, 60], ["5px", "10px"]);
 
   const backgroundColor = useTransform(
     scrollY,
@@ -50,7 +50,7 @@ const Navbar = () => {
       animate={{ y: 0 }}
       transition={{ duration: 1, type: "spring", delay: 0.5 }}
       style={{ backgroundColor, width: navWidth, top: top }}
-      className={`min-h-[65px] w-[1215px] sticky top- z-50 border-2 backdrop-blur-xl rounded-xl flex justify-between items-center px-4`}
+      className={`min-h-[65px]  sticky top- z-50 border-2 backdrop-blur-xl rounded-xl flex justify-between items-center px-4`}
     >
       {/* Left section */}
       <div className="h-full flex items-center gap-6 w-1/2">

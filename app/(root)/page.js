@@ -1,5 +1,6 @@
-import DummyMeetingCard from "@/components/DummyMeetingcard";
-import HeroSection from "@/components/HeroSection";
+import DummyMeetingCard from "@/components/LandingPageComponents/DummyMeetingcard";
+import HeroSection from "@/components/LandingPageComponents/HeroSection";
+import Section2 from "@/components/LandingPageComponents/Section2";
 import Navbar from "@/components/Navbar";
 
 export default function Home() {
@@ -9,7 +10,10 @@ export default function Home() {
         <HeroSection />
         <DummyMeetingCard />
       </div>
-      <div className="text-black h-[100vh] border-black relative"></div>
+
+      <div className="text-black w-full h-[100vh] border-black relative">
+        <Section2 />
+      </div>
     </>
   );
 }

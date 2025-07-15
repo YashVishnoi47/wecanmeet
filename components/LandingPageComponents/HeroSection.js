@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import DummyMeetingCard from "./DummyMeetingcard";
-import StartButton from "./StartButton";
+import StartButton from "../StartButton";
 
 const HeroSection = () => {
   const { data: session } = useSession();
