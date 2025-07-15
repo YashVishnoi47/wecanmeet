@@ -10,7 +10,7 @@ const HeroSection = () => {
   const { data: session } = useSession();
 
   return (
-    <div className="w-full flex justify-center mt-15 border-black items-center h-[30%] ">
+    <div className="w-full flex flex-col justify-center mt-20 border-black items-center h-[30%]">
       <div className="w-full h-full flex flex-col justify-center  border-black items-center">
         <div className="w-full h-full px-6 py-8 flex flex-col justify-center items-center text-center space-y-6">
           {/* Heading */}

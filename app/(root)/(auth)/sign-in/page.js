@@ -41,9 +41,7 @@ const SignIn = () => {
   };
 
   return (
-    <div className="bg-gray-100">
-      <Navbar />
-      <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      <div className="flex justify-center w-full items-center min-h-[90vh]">
         <div className="w-full max-w-md p-8 bg-white rounded-2xl shadow-lg">
           <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
             Login
@@ -93,7 +91,6 @@ const SignIn = () => {
           </form>
         </div>
       </div>
-    </div>
   );
 };
 

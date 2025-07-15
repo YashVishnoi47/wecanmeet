@@ -5,12 +5,11 @@ import Navbar from "@/components/Navbar";
 export default function Home() {
   return (
     <>
-      <div className="text-black  h-[150vh] border-2 border-black relative bg-gradient-to-br from-white via-gray-100 to-gray-50">
-        <Navbar />
+      <div className="text-black h-[150vh] border-black relative ">
         <HeroSection />
-
-        <DummyMeetingCard /> {/* Meeting Card */}
+        <DummyMeetingCard />
       </div>
+      <div className="text-black h-[100vh] border-black relative"></div>
     </>
   );
 }

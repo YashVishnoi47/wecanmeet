@@ -41,7 +41,7 @@ const DummyMeetingCard = () => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, delay: 1.8 }}
       className="w-full h-[55%] flex justify-center items-start px-6 py-8"
