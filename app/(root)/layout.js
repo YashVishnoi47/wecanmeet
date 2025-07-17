@@ -15,10 +15,10 @@ export default function RootLayout({ children }) {
     <AuthProvider>
       <html lang="en">
         <body
-          className={`${rubik.className} antialiased selection:bg-gray-500 selection:text-white w-full min-h-screen flex justify-center items-center flex-col bg-gradient-to-br from-white via-gray-100 to-gray-50`}
+          className={`${rubik.className} antialiased selection:bg-gray-500 selection:text-white w-full min-h-screen bg-gradient-to-br from-white via-gray-100 to-gray-50 flex flex-col items-center`}
         >
-          <Navbar />
-          {children}
+          <Navbar /> {/* stays at top as expected */}
+          {children} {/* now flows naturally */}
         </body>
       </html>
     </AuthProvider>

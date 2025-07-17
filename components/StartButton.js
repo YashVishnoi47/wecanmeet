@@ -1,10 +1,11 @@
+"use session"
 import React from "react";
 import styled from "styled-components";
 
-const StartButton = () => {
+const StartButton = ({handleClick}) => {
   return (
     <StyledWrapper>
-      <button className="animated-button">
+      <button onClick={handleClick} className="animated-button">
         <svg
           viewBox="0 0 24 24"
           className="arr-2"
