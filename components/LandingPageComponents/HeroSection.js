@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 
 const HeroSection = () => {
   const { data: session } = useSession();
+  console.log(session);
   const router = useRouter();
 
   const handleClick = () => {

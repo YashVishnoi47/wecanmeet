@@ -1,13 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import UseUserStore from "@/store/userStore";
 import UseCompStore from "@/store/componentStore";
 import dynamic from "next/dynamic";
-import { Radio, UserCog } from "lucide-react";
+import { LogOut, Radio, UserCog } from "lucide-react";
 import { Menu } from "lucide-react";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
@@ -94,7 +94,6 @@ const Dashboard = () => {
       if (!res.ok) {
         console.log(data.error);
       }
-
 
       setTriggerMeetingFetch((prev) => !prev);
       console.log(data.success);
@@ -439,6 +438,13 @@ const Dashboard = () => {
                     Save Changes
                   </Button>
                 </DialogFooter>
+                <Button
+                  onClick={() => signOut()}
+                  className="bg-white text-red-600 border border-red-200 hover:bg-red-50 hover:text-red-700 hover:border-red-300 transition-all duration-300 flex items-center gap-2 px-4 py-2 rounded-lg font-medium"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Logout
+                </Button>
               </motion.div>
             </DialogContent>
           </Dialog>

@@ -82,8 +82,6 @@ const SignUp = () => {
 
   return (
     <div className="bg-gray-100 w-full h-screen flex flex-col">
-      <Navbar />
-
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}

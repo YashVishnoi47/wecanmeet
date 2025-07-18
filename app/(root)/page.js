@@ -4,7 +4,6 @@ import HeroSection from "@/components/LandingPageComponents/HeroSection";
 import Section2 from "@/components/LandingPageComponents/Section2";
 import Section3 from "@/components/LandingPageComponents/Section3";
 import Section4 from "@/components/LandingPageComponents/Section4";
-import Navbar from "@/components/Navbar";
 
 export default function Home() {
   return (
@@ -30,7 +29,6 @@ export default function Home() {
         <Section4 />
       </div>
 
-      {/* Footer */}
       <Footer />
     </>
   );
