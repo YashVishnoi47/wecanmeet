@@ -24,6 +24,7 @@ const MeetingCardComp = ({ workingDays }) => {
     meetingDuration: "",
     meetingMode: "",
   });
+
   const {
     schedule,
     timeRange,
@@ -39,6 +40,8 @@ const MeetingCardComp = ({ workingDays }) => {
     setStep,
     meetting,
     setMeetting,
+    meettingBooked,
+    setMeettingBooked,
   } = UseLivePageStore();
 
   const dayNameToNumber = {
@@ -99,8 +102,8 @@ const MeetingCardComp = ({ workingDays }) => {
   // Function to conform the meeting.
   const onSubmit = async (e) => {
     e.preventDefault();
+    const formattedDate = selected.toISOString().split("T")[0];
     try {
-      const formattedDate = selected.toISOString().split("T")[0];
       const res = await fetch("/api/meeting/createMeeting", {
         method: "POST",
         headers: {
@@ -432,22 +435,3 @@ const MeetingCardComp = ({ workingDays }) => {
 
 export default MeetingCardComp;
 
-{
-  /* <div className="w-[60%] h-[20%] bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl flex items-center gap-6 p-4 shadow-md">
-            Profile Picture
-            <div className="w-[90px] h-[90px] rounded-full border border-gray-400 bg-gray-800 flex items-center justify-center overflow-hidden">
-              Replace with actual image
-              <span className="text-white text-xl font-semibold">👤</span>
-            </div>
-
-            Owner Info
-            <div className="flex flex-col justify-center items-start">
-              <h1 className="text-xl md:text-2xl font-bold text-white leading-tight">
-                Yash Bishnoi
-              </h1>
-              <p className="text-sm text-gray-300 mt-1">
-                Full Stack Developer | Building AI & Web
-              </p>
-            </div>
-          </div> */
-}

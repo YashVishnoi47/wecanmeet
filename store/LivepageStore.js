@@ -33,6 +33,9 @@ const UseLivePageStore = create((set) => ({
 
   meetting: null,
   setMeetting: (meetting) => set({ meetting }),
+
+  meettingBooked: false,
+  setMeettingBooked: (meettingBooked) => set({ meettingBooked }),
 }));
 
 export default UseLivePageStore;
