@@ -71,7 +71,6 @@ const Dashboard = () => {
         console.log(data.error);
       }
       setTriggerMeetingFetch((prev) => !prev);
-      console.log("Meeting updated");
     } catch (error) {
       console.error(error);
     }
@@ -89,7 +88,6 @@ const Dashboard = () => {
       });
 
       const data = await res.json();
-      console.log(data);
 
       if (!res.ok) {
         console.log(data.error);
@@ -215,7 +213,6 @@ const Dashboard = () => {
         return;
       }
 
-      console.log("User updated successfully:", data.user);
     } catch (error) {
       console.error("Error updating user:", error);
     }

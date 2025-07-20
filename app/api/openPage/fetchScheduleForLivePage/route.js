@@ -8,7 +8,6 @@ export const GET = async (req) => {
   try {
     const { searchParams } = new URL(req.url);
     const meetingCardId = searchParams.get("MeetingCardId");
-    console.log(meetingCardId)
 
     if (!meetingCardId) {
       return NextResponse.json(

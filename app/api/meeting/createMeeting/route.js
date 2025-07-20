@@ -80,6 +80,7 @@ export const POST = async (req) => {
         message: meeting.clientMsg,
         clientEmail: meeting.clientEmail,
         userEmail: user.Email,
+        hostName:user.FullName,
         meetingDate: formattedDate,
         meetingTime: meeting.meetingTime,
       });
@@ -90,6 +91,7 @@ export const POST = async (req) => {
         clientName:meeting.clientName,
         clientEmail: meeting.clientEmail,
         userEmail: user.Email,
+        hostName:user.FullName,
         meetingDate: formattedDate,
         meetingTime: meeting.meetingTime,
       });

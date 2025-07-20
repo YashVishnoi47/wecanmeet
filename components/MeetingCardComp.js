@@ -89,7 +89,6 @@ const MeetingCardComp = ({ workingDays }) => {
         ([day]) => day === SelectedWeakDay
       );
 
-      console.log("Selected Day Schedule:", selectedDayData);
       if (selectedDayData.length > 0) {
         const dayData = selectedDayData[0][1];
         const timeSlots = dayData.timeSlots;

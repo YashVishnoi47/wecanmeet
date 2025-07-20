@@ -1,7 +1,7 @@
 import nodemailer from "nodemailer";
 import { NextResponse } from "next/server";
 import { render } from "@react-email/render";
-import MeetingBookedEmail from "@/emails/MeetingBookedEmailToClient";
+import MeetingBookedEmail from "@/emails-component/MeetingBookedEmailToClient";
 
 export async function POST(req) {
   try {

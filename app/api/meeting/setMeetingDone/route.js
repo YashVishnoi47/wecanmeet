@@ -1,5 +1,8 @@
 import { connectDB } from "@/lib/db/database";
 import Meeting from "@/lib/db/models/meetingModel";
+import User from "@/lib/db/models/userModel";
+import { MeetingCompletedEmailToClientFunc } from "@/lib/emails/EmailForMeetingCompleted/SendEmail";
+import { format } from "date-fns";
 import { NextResponse } from "next/server";
 
 export const GET = async (req) => {
@@ -21,6 +24,9 @@ export const GET = async (req) => {
     const updatedMeeting = await Meeting.findByIdAndUpdate(meetingId, {
       completed: completed,
     });
+    const host = await User.findById(updatedMeeting.ownerID).select(
+      "Email FullName"
+    );
 
     if (!updatedMeeting) {
       return NextResponse.json(
@@ -29,8 +35,25 @@ export const GET = async (req) => {
       );
     }
 
+    const formattedDate = format(
+      new Date(updatedMeeting.meetingdate),
+      "eeee, MMMM do, yyyy"
+    );
+
+    if (updatedMeeting) {
+      await MeetingCompletedEmailToClientFunc({
+        message: updatedMeeting.clientMsg,
+        clientEmail: updatedMeeting.clientEmail,
+        userEmail: host.Email,
+        meetingDate: formattedDate,
+        meetingTime: updatedMeeting.meetingTime,
+        hostName: host.FullName,
+      });
+    }
+
     return NextResponse.json({ updatedMeeting }, { status: 200 });
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }
