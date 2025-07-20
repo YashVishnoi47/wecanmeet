@@ -44,11 +44,13 @@ const Dashboard = () => {
     triggerMeetingFetch,
     setTriggerMeetingFetch,
   } = UseUserStore();
-  const { dashboardComp, setDashboardComp } = UseCompStore();
+  const { dashboardComp, setDashboardComp, settingsComp, setSettingsComp } =
+    UseCompStore();
   const [userDetails, SetuserDetails] = useState({
     email: "",
     userName: "",
     FullName: "",
+    profession: "",
   });
 
   // Function to set the meeting done
@@ -179,12 +181,14 @@ const Dashboard = () => {
           email: data.user.Email,
           userName: data.user.userName,
           FullName: data.user.FullName,
+          profession: data.user.profession,
         });
       }
     } catch (error) {
       console.error(error);
     }
   };
+
   useEffect(() => {
     if (!session) return;
     fetchUserDetails();
@@ -203,6 +207,7 @@ const Dashboard = () => {
           email: userDetails.email,
           FullName: userDetails.FullName,
           userName: userDetails.userName,
+          Professtion: userDetails.Professtion,
         }),
       });
 
@@ -212,7 +217,6 @@ const Dashboard = () => {
         console.error("Update error:", data.error);
         return;
       }
-
     } catch (error) {
       console.error("Error updating user:", error);
     }
@@ -354,95 +358,142 @@ const Dashboard = () => {
                 Profile Settings
               </button>
             </DialogTrigger>
-            <DialogTitle></DialogTitle>
+            <DialogTitle>{""}</DialogTitle>
 
-            <DialogContent className="sm:max-w-lg w-full border-none bg-black text-white p-6 max-h-[80vh] overflow-y-auto">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                className="space-y-6"
-              >
-                <DialogHeader>
-                  <DialogTitle className="text-2xl font-semibold">
-                    Edit Your Profile
-                  </DialogTitle>
-                  <DialogDescription className="text-gray-400">
-                    Update your personal information below.
-                  </DialogDescription>
-                </DialogHeader>
-
-                <div className="grid grid-cols-1 gap-4">
-                  <div>
-                    <Label htmlFor="name">Full Name</Label>
-                    <Input
-                      id="name"
-                      name="name"
-                      value={userDetails.FullName}
-                      onChange={(e) =>
-                        SetuserDetails((prev) => ({
-                          ...prev,
-                          FullName: e.target.value,
-                        }))
-                      }
-                      className="bg-white/10 border border-white/30 text-white placeholder-gray-500 mt-1 rounded-md focus:border-white"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="username">Username</Label>
-                    <Input
-                      id="username"
-                      name="username"
-                      value={userDetails.userName}
-                      onChange={(e) =>
-                        SetuserDetails((prev) => ({
-                          ...prev,
-                          userName: e.target.value,
-                        }))
-                      }
-                      className="bg-white/10 border border-white/30 text-white placeholder-gray-500 mt-1 rounded-md focus:border-white"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="email">Email Address</Label>
-                    <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={userDetails.email}
-                      onChange={(e) =>
-                        SetuserDetails((prev) => ({
-                          ...prev,
-                          email: e.target.value,
-                        }))
-                      }
-                      className="bg-white/10 border border-white/30 text-white placeholder-gray-500 mt-1 rounded-md focus:border-white"
-                    />
-                  </div>
-                </div>
-
-                <DialogFooter className="flex justify-end gap-3">
-                  <Button
-                    variant="outline"
-                    className="border-white text-white hover:bg-white/10 hover:text-white"
+            <DialogContent className="sm:max-w-[50%] sm:h-[80%] w-full flex justify-center items-center bg-black/10 backdrop-blur-md text-white p-0 gap-0 max-h-[80vh] overflow-y-auto border-white/20">
+              {/* Left Section */}
+              <div className="h-full w-[30%] border-r-2 border-white/10 rounded-xl flex flex-col gap-3 items-center text-white">
+                <h1 className="w-full flex justify-center items-center text-2xl py-4 border-b border-gray-500 mb-4">
+                  Settings
+                </h1>
+                {["User Settings"].map((item, idx) => (
+                  <div
+                    onClick={() => setSettingsComp(item)}
+                    className={`w-[95%] px-2 py-2 border border-white/10 rounded-lg hover:bg-white/10 backdrop-blur-lg transition-all duration-300 ease-in-out cursor-pointer text-md ${settingsComp === item ? "bg-white/10" : ""}`}
+                    key={idx}
                   >
-                    Cancel
-                  </Button>
-                  <Button
-                    onClick={updateUser}
-                    className="bg-white text-black hover:bg-black hover:text-white border border-white"
-                  >
-                    Save Changes
-                  </Button>
-                </DialogFooter>
-                <Button
-                  onClick={() => signOut()}
-                  className="bg-white text-red-600 border border-red-200 hover:bg-red-50 hover:text-red-700 hover:border-red-300 transition-all duration-300 flex items-center gap-2 px-4 py-2 rounded-lg font-medium"
-                >
-                  <LogOut className="w-4 h-4" />
-                  Logout
-                </Button>
-              </motion.div>
+                    {item}
+                  </div>
+                ))}
+              </div>
+
+              {/* Right Section */}
+              <div className="h-full w-[70%] rounded-xl overflow-x-hidden overflow-y-hidden ">
+                <AnimatePresence>
+                  {settingsComp === "User Settings" && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.95, y: -200 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.95, y: -200 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 200,
+                        damping: 20,
+                      }}
+                      className="w-full h-full flex justify-center items-start flex-col p-0 "
+                    >
+                      <DialogHeader className={" w-[90%] h-[12%] p-2"}>
+                        <DialogTitle className="text-2xl font-semibold">
+                          Edit Your Profile
+                        </DialogTitle>
+                        <DialogDescription className="text-gray-400">
+                          Update your personal information below.
+                        </DialogDescription>
+                      </DialogHeader>
+
+                      <div className="w-[90%] h-[78%] flex flex-col px-2 py-4">
+                        {/* Name */}
+                        <div className="w-[90%] p-2">
+                          <Label htmlFor="name">Full Name</Label>
+                          <Input
+                            id="name"
+                            name="name"
+                            value={userDetails.FullName}
+                            onChange={(e) =>
+                              SetuserDetails((prev) => ({
+                                ...prev,
+                                FullName: e.target.value,
+                              }))
+                            }
+                            className="bg-white/10 w-full border border-white/30 text-white placeholder-gray-500 mt-1 rounded-md focus:border-white"
+                          />
+                        </div>
+
+                        {/* Username */}
+                        <div className="w-[90%] p-2">
+                          <Label htmlFor="username">
+                            Username
+                            <p className={"text-gray-400 text-xs"}>
+                              (Cannot be changed)
+                            </p>
+                          </Label>
+                          <Input
+                            id="username"
+                            name="username"
+                            disabled
+                            value={userDetails.userName}
+                            onChange={(e) =>
+                              SetuserDetails((prev) => ({
+                                ...prev,
+                                userName: e.target.value,
+                              }))
+                            }
+                            className="bg-white/10 w-full border border-white/30 text-white placeholder-gray-500 mt-1 rounded-md focus:border-white"
+                          />
+                        </div>
+
+                        {/* Email */}
+                        <div className="w-[90%] p-2">
+                          <Label htmlFor="email">Your Profession</Label>
+                          <Input
+                            id="email"
+                            name="email"
+                            type="email"
+                            value={userDetails.profession}
+                            onChange={(e) =>
+                              SetuserDetails((prev) => ({
+                                ...prev,
+                                profession: e.target.value,
+                              }))
+                            }
+                            className="bg-white/10 w-full border border-white/30 text-white placeholder-gray-500 mt-1 rounded-md focus:border-white"
+                          />
+                        </div>
+
+                        {/* Email */}
+                        <div className="w-[90%] p-2">
+                          <Label htmlFor="email">Email Address</Label>
+                          <Input
+                            id="email"
+                            name="email"
+                            type="email"
+                            value={userDetails.email}
+                            onChange={(e) =>
+                              SetuserDetails((prev) => ({
+                                ...prev,
+                                email: e.target.value,
+                              }))
+                            }
+                            className="bg-white/10 w-full border border-white/30 text-white placeholder-gray-500 mt-1 rounded-md focus:border-white"
+                          />
+                        </div>
+
+                        {/* Save changes */}
+                        <div className="flex justify-end w-[90%] items-center h-[10%] gap-3">
+                          <Button
+                            onClick={updateUser}
+                            className="bg-white  text-black mt-10 hover:bg-white/20 hover:text-white border border-white transition-all duration-300 ease-in-out cursor-pointer"
+                          >
+                            Save Changes
+                          </Button>
+                        </div>
+                      </div>
+
+                      <DialogFooter className="flex justify-end w-[90%] items-center h-[10%] gap-3"></DialogFooter>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             </DialogContent>
           </Dialog>
         </div>
