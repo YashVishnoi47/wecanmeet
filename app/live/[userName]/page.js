@@ -79,6 +79,7 @@ const Live = () => {
           meetingCard.map((item, idx) => (
             <MeetingCardComp
               workingDays={workingDays}
+              user={user}
               key={idx}
               cardDetails={item}
             />

@@ -5,7 +5,6 @@ import { DayPicker } from "react-day-picker";
 import "react-day-picker/style.css";
 import UseLivePageStore from "@/store/LivepageStore";
 import { generateTimeSlots } from "@/lib/utils";
-import { useSession } from "next-auth/react";
 import {
   Select,
   SelectContent,
@@ -14,9 +13,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const MeetingCardComp = ({ workingDays }) => {
+const MeetingCardComp = ({ workingDays, user }) => {
   const today = new Date();
-  const { data: session } = useSession();
   const [clientFormDetails, setClientFormDetails] = useState({
     clientName: "",
     clientEmail: "",
@@ -115,7 +113,7 @@ const MeetingCardComp = ({ workingDays }) => {
           clientMsg: clientFormDetails.clientMsg,
           meetingDate: formattedDate,
           meetingTime: time,
-          ownerID: session?.user._id,
+          ownerID: user._id,
           meetingDuration: clientFormDetails.meetingDuration,
           meetingMode: clientFormDetails.meetingMode,
         }),
@@ -157,13 +155,13 @@ const MeetingCardComp = ({ workingDays }) => {
                 </div>
                 <div className="flex flex-col">
                   <p className="text-white text-lg font-semibold capitalize">
-                    {session?.user.FullName}
+                    {user.FullName}
                   </p>
                   <a
-                    href={`mailto:${session?.user.Email}`}
+                    href={`mailto:${user.Email}`}
                     className="text-white/60 text-sm underline hover:text-white transition"
                   >
-                    {session?.user.Email}
+                    {user.Email}
                   </a>
                 </div>
               </div>
@@ -433,4 +431,3 @@ const MeetingCardComp = ({ workingDays }) => {
 };
 
 export default MeetingCardComp;
-
